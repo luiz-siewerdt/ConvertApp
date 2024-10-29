@@ -2,11 +2,11 @@
 #define VIDEO_CONVERT_H
 
 #include <string>
-#include <unordered_map>
+#include <vector>
 using namespace std;
 namespace Convert {
 
-extern const std::unordered_map<size_t, std::string> video_extensions;
+extern const vector<string> video_extensions;
 bool convertVideo(const string &video_path, const string &new_extension);
 
 } // namespace Convert

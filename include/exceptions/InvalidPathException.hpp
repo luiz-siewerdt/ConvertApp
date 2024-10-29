@@ -13,9 +13,8 @@ class InvalidPathException : public exception {
   string errorMessage;
 
 public:
-  explicit InvalidPathException(const string &invalidPath) {
-    this->errorMessage = invalidPath + " isn't a valid path";
-  }
+  explicit InvalidPathException(const string &invalidPath)
+      : errorMessage(invalidPath + " isn't a valid path") {}
 
   const char *what() const noexcept override { return errorMessage.c_str(); }
 };

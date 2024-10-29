@@ -3,17 +3,18 @@
 #include "exceptions/InvalidFileException.hpp"
 #include "exceptions/InvalidPathException.hpp"
 #include <algorithm>
+#include <ctime>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <sstream>
-#include <unordered_map>
+#include <vector>
 
 using namespace std;
 namespace Convert {
 
 const filesystem::path default_file_folder{
-    filesystem::current_path().parent_path().parent_path() / "tmp"};
+    filesystem::current_path().parent_path() / "tmp"};
 
 void replace_filename(string &filename, const string &new_filename) {
   // cout << filename << " - " << new_filename << '\n';
@@ -28,7 +29,6 @@ void get_paths_historic() {
   ifstream input_file("historic.txt");
   stringstream buffer;
   if (!input_file) {
-    cout << "File doenst exists, trying to create" << '\n';
     input_file.close();
 
     ofstream output_file("historic.txt");
@@ -51,36 +51,41 @@ void get_paths_historic() {
   input_file.close();
 }
 
-void update_paths_historic(const string &historic) {
+void update_paths_historic(const string &path_file, const string &extension) {
   ofstream output_file("historic.txt");
   if (!output_file) {
     cerr << "Failed to create the file" << '\n';
     return;
   }
+  time_t timestamp = time(NULL);
+  struct tm datetime = *localtime(&timestamp);
+  char output[50];
 
-  output_file << historic << '\n';
+  strftime(output, 50, "%d-%m-%G %X", &datetime);
+
+  output_file << output << " - " << path_file << " -> " << extension << '\n';
+
   output_file.close();
 }
 
 PathAttrs valid_path(const filesystem::path &path,
-                     unordered_map<size_t, string> &extension_map) {
+                     const vector<string> &extensions) {
   string path_string{path.string()};
 
   if (!path.has_filename() || !path.has_extension()) {
     throw InvalidFileException(path_string);
   }
-  if (!filesystem::exists(path_string)) {
+  if (!filesystem::exists(path)) {
     throw InvalidPathException(path_string);
   }
 
-  string extension{path.extension().string().replace(0, 1, "")};
+  string extension{path.extension().string().substr(1)};
   string filename = path.filename();
 
-  auto it{find_if(
-      extension_map.begin(), extension_map.end(),
-      [extension](const auto &pair) { return pair->second == extension; })};
+  auto it{find_if(extensions.begin(), extensions.end(),
+                  [extension](const string &ex) { return ex == extension; })};
 
-  if (it == extension_map.end()) {
+  if (it == extensions.end()) {
     throw InvalidExtensionException(extension);
   }
 

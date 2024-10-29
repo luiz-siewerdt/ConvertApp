@@ -2,11 +2,11 @@
 #define IMAGE_CONVERT_H
 
 #include <string>
-#include <unordered_map>
+#include <vector>
 using namespace std;
 
 namespace Convert {
-extern const unordered_map<size_t, string> image_extensions;
+extern const vector<string> image_extensions;
 
 bool convertImage(const string &image_path_string, const string &new_extension);
 

@@ -11,9 +11,8 @@ class InvalidExtensionException : public exception {
   string errorMessage;
 
 public:
-  explicit InvalidExtensionException(const string &extension) {
-    this->errorMessage = extension + " isn't a valid extension";
-  }
+  explicit InvalidExtensionException(const string &extension)
+      : errorMessage(extension + " isn't a valid extension") {}
 
   const char *what() const noexcept { return errorMessage.c_str(); }
 };

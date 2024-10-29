@@ -1,1 +1,9 @@
 build/
+.cache/
+
+tmp/images/**
+!tmp/images/.gitkeep
+
+tmp/videos/**
+!tmp/videos/.gitkeep
+

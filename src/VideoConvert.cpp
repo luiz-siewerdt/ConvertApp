@@ -1,14 +1,12 @@
 #include "VideoConvert.hpp"
 #include "Utils.hpp"
-#include "exceptions/InvalidExtensionException.hpp"
-#include "exceptions/InvalidFileException.hpp"
-#include "exceptions/InvalidPathException.hpp"
+#include <exception>
 #include <filesystem>
 #include <iostream>
 #include <opencv2/core/types.hpp>
 #include <opencv2/opencv.hpp>
 #include <opencv2/videoio.hpp>
-#include <unordered_map>
+#include <vector>
 
 using namespace std;
 using namespace cv;
@@ -16,8 +14,7 @@ using namespace Convert;
 namespace fs = std::filesystem;
 
 namespace Convert {
-const unordered_map<size_t, string> video_extensions{
-    {1, "mp4"}, {2, "avi"}, {3, "webm"}, {5, "mkv"}, {6, "wmv"}};
+const vector<string> video_extensions{"mp4", "avi", "webm", "mkv", "wmv"};
 
 bool convertVideo(const string &video_path_string,
                   const string &new_extension) {
@@ -69,11 +66,7 @@ bool convertVideo(const string &video_path_string,
 
     cout << "Video conversion completed successfully" << '\n';
     return true;
-  } catch (InvalidFileException &e) {
-    cout << e.what() << '\n';
-  } catch (InvalidExtensionException &e) {
-    cout << e.what() << '\n';
-  } catch (InvalidPathException &e) {
+  } catch (std::exception &e) {
     cout << e.what() << '\n';
   }
   return false;

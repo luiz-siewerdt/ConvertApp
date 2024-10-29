@@ -12,9 +12,8 @@ class InvalidFileException : public exception {
   string errorMessage;
 
 public:
-  explicit InvalidFileException(const string &invalidPath) {
-    this->errorMessage = invalidPath + " isn't a valid file";
-  }
+  explicit InvalidFileException(const string &invalidPath)
+      : errorMessage(invalidPath + " isn't a valid file") {}
 
   const char *what() const noexcept { return errorMessage.c_str(); }
 };
